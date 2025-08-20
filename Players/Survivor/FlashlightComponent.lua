@@ -1,4 +1,5 @@
 local RunService = game:GetService("RunService")
+local DarknessManager = require(game:GetService("ReplicatedStorage"):WaitForChild("World"):WaitForChild("DarknessManager"))
 
 local FlashlightComponent = {}
 FlashlightComponent.__index = FlashlightComponent
@@ -13,6 +14,8 @@ function FlashlightComponent.new(light)
     self.recharging = false
     if self.light then
         self.light.Enabled = false
+        self.baseBrightness = self.light.Brightness
+        self.baseRange = self.light.Range
     end
     self.flickerSound = Instance.new("Sound")
     self.flickerSound.SoundId = "rbxassetid://0" -- replace with uploaded flicker asset id
@@ -41,6 +44,11 @@ end
 
 function FlashlightComponent:update(dt)
     if self.light and self.light.Enabled then
+        local parent = self.light.Parent
+        local pos = parent and parent.Position or Vector3.new()
+        local mult = DarknessManager and DarknessManager:GetLightMultiplier(pos) or 1
+        self.light.Brightness = self.baseBrightness * mult
+        self.light.Range = self.baseRange * mult
         self.battery = math.max(0, self.battery - dt)
         if self.battery <= 0 then
             self.light.Enabled = false

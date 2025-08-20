@@ -107,10 +107,10 @@ function MatchController:assignRoles()
 
     self.roles = {}
     for i, plr in ipairs(pool) do
-        if i <= targetShadows then
-            self.roles[plr] = "Shadow"
-        else
-            self.roles[plr] = "Survivor"
+        local role = i <= targetShadows and "Shadow" or "Survivor"
+        self.roles[plr] = role
+        if plr.SetAttribute then
+            plr:SetAttribute("Role", role)
         end
     end
 end
