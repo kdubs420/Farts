@@ -1,5 +1,6 @@
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
+local Debris = game:GetService("Debris")
 
 local DarknessManager = {}
 DarknessManager.__index = DarknessManager
@@ -10,7 +11,8 @@ DarknessManager.MAX_RADIUS = 200
 DarknessManager.SHADOW_SPEED_BUFF = 1.12
 DarknessManager.SURVIVOR_VIS_TRANSPARENCY = 0.4
 DarknessManager.SHADOW_LIGHT_TRANSPARENCY = 0.55
-DarknessManager.SHADOW_DARK_TRANSPARENCY = 0.2
+DarknessManager.SHADOW_DARK_TRANSPARENCY = 0
+DarknessManager.VIGNETTE_DARK_ALPHA = 0.4
 
 function DarknessManager.new()
     local self = setmetatable({}, DarknessManager)
@@ -60,7 +62,9 @@ end
 
 function DarknessManager:ExpandZones()
     for _, zone in ipairs(self.zones) do
+        local oldRadius = zone.radius
         zone.radius = math.min(zone.radius + DarknessManager.EXPANSION_AMOUNT, DarknessManager.MAX_RADIUS)
+        self:_emitExpansionParticles(zone.center, oldRadius, zone.radius)
     end
 end
 
@@ -98,6 +102,32 @@ function DarknessManager:_applySurvivorEffects(char, inDark)
             end
         end
     end
+
+    local plr = Players:GetPlayerFromCharacter(char)
+    if plr then
+        local gui = plr:FindFirstChildOfClass("PlayerGui")
+        if gui then
+            local overlay = gui:FindFirstChild("DarknessVignette")
+            if not overlay then
+                overlay = Instance.new("ScreenGui")
+                overlay.Name = "DarknessVignette"
+                overlay.IgnoreGuiInset = true
+                local img = Instance.new("ImageLabel")
+                img.Name = "Vignette"
+                img.BackgroundTransparency = 1
+                img.Image = "rbxassetid://0"
+                img.ImageColor3 = Color3.new(0,0,0)
+                img.Size = UDim2.fromScale(1,1)
+                img.ImageTransparency = 1
+                img.Parent = overlay
+                overlay.Parent = gui
+            end
+            local img = overlay:FindFirstChild("Vignette")
+            if img then
+                img.ImageTransparency = inDark and DarknessManager.VIGNETTE_DARK_ALPHA or 1
+            end
+        end
+    end
 end
 
 function DarknessManager:_applyShadowEffects(char, hum, inDark)
@@ -120,6 +150,30 @@ function DarknessManager:_applyShadowEffects(char, hum, inDark)
             end
         end
     end
+end
+
+function DarknessManager:_emitExpansionParticles(position, fromRadius, toRadius)
+    local part = Instance.new("Part")
+    part.Anchored = true
+    part.CanCollide = false
+    part.Transparency = 1
+    part.CFrame = CFrame.new(position)
+    part.Parent = workspace
+
+    local emitter = Instance.new("ParticleEmitter")
+    emitter.Texture = "rbxassetid://0"
+    emitter.Color = ColorSequence.new(Color3.new(0,0,0))
+    emitter.Lifetime = NumberRange.new(1)
+    emitter.Rate = 0
+    emitter.Speed = NumberRange.new(0)
+    emitter.Size = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, fromRadius),
+        NumberSequenceKeypoint.new(1, toRadius)
+    })
+    emitter.Parent = part
+    emitter:Emit(80)
+
+    Debris:AddItem(part, 2)
 end
 
 function DarknessManager:Destroy()

@@ -21,6 +21,15 @@ function FlashlightComponent.new(light)
     self.flickerSound.SoundId = "rbxassetid://0" -- replace with uploaded flicker asset id
     self.flickerSound.Volume = 0.5
     self.flickerSound.Parent = light and light.Parent or workspace
+
+    -- aura that glows while the survivor has battery charge
+    self.aura = Instance.new("PointLight")
+    self.aura.Brightness = 0.6
+    self.aura.Range = 12
+    self.aura.Color = Color3.new(1, 0.95, 0.8)
+    self.aura.Enabled = false
+    self.aura.Parent = light and light.Parent or workspace
+
     self._conn = RunService.Heartbeat:Connect(function(dt)
         self:update(dt)
     end)
@@ -54,6 +63,10 @@ function FlashlightComponent:update(dt)
             self.light.Enabled = false
         end
     end
+
+    if self.aura then
+        self.aura.Enabled = self.battery > 0
+    end
 end
 
 function FlashlightComponent:startRecharge(station)
@@ -78,6 +91,10 @@ function FlashlightComponent:Destroy()
     if self.flickerSound then
         self.flickerSound:Destroy()
         self.flickerSound = nil
+    end
+    if self.aura then
+        self.aura:Destroy()
+        self.aura = nil
     end
 end
 
