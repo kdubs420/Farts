@@ -16,6 +16,12 @@ function SprintComponent.new(humanoid)
     self.isSprinting = false
     self.inShadow = false
     self.humanoid.WalkSpeed = SprintComponent.WALK_SPEED
+    self.breathSound = Instance.new("Sound")
+    self.breathSound.SoundId = "rbxassetid://0" -- replace with uploaded breathing asset id
+    self.breathSound.Looped = true
+    self.breathSound.Volume = 0
+    self.breathSound.Parent = humanoid.RootPart or humanoid.Parent:WaitForChild("HumanoidRootPart")
+    self.breathSound:Play()
     self._conn = RunService.Heartbeat:Connect(function(dt)
         self:update(dt)
     end)
@@ -30,6 +36,7 @@ function SprintComponent:start()
     if self.stamina > 0 then
         self.isSprinting = true
         self.humanoid.WalkSpeed = SprintComponent.SPRINT_SPEED
+        self.breathSound.Volume = 0.6
     end
 end
 
@@ -37,6 +44,7 @@ function SprintComponent:stop()
     if self.isSprinting then
         self.isSprinting = false
         self.humanoid.WalkSpeed = SprintComponent.WALK_SPEED
+        self.breathSound.Volume = 0
     end
 end
 
@@ -59,6 +67,10 @@ function SprintComponent:Destroy()
     if self._conn then
         self._conn:Disconnect()
         self._conn = nil
+    end
+    if self.breathSound then
+        self.breathSound:Destroy()
+        self.breathSound = nil
     end
 end
 

@@ -14,6 +14,10 @@ function FlashlightComponent.new(light)
     if self.light then
         self.light.Enabled = false
     end
+    self.flickerSound = Instance.new("Sound")
+    self.flickerSound.SoundId = "rbxassetid://0" -- replace with uploaded flicker asset id
+    self.flickerSound.Volume = 0.5
+    self.flickerSound.Parent = light and light.Parent or workspace
     self._conn = RunService.Heartbeat:Connect(function(dt)
         self:update(dt)
     end)
@@ -27,8 +31,10 @@ function FlashlightComponent:toggle()
     if self.light then
         if self.light.Enabled then
             self.light.Enabled = false
+            self.flickerSound:Play()
         elseif self.battery > 0 then
             self.light.Enabled = true
+            self.flickerSound:Play()
         end
     end
 end
@@ -60,6 +66,10 @@ function FlashlightComponent:Destroy()
     if self._conn then
         self._conn:Disconnect()
         self._conn = nil
+    end
+    if self.flickerSound then
+        self.flickerSound:Destroy()
+        self.flickerSound = nil
     end
 end
 
