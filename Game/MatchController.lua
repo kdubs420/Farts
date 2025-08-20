@@ -1,4 +1,6 @@
 local Players = game:GetService("Players")
+local RewardsManager = require(script.Parent.Parent.Systems.RewardsManager)
+local CosmeticsManager = require(script.Parent.Parent.Systems.CosmeticsManager)
 
 local MatchController = {}
 MatchController.__index = MatchController
@@ -45,6 +47,7 @@ end
 
 local HuntPhase = {}
 function HuntPhase:enter(controller)
+    controller.RewardsManager:BeginMatch(controller.roles)
     controller:triggerDarkness()
     controller:schedule(HUNT_MIN_DURATION, function()
         controller:transitionTo(EndgamePhase)
@@ -62,6 +65,7 @@ end
 local ResultsPhase = {}
 function ResultsPhase:enter(controller)
     controller:calculateResults()
+    controller.RewardsManager:Distribute(controller.winningTeam)
     controller:schedule(RESULTS_DURATION, function()
         controller:transitionTo(LobbyPhase)
     end)
@@ -72,6 +76,8 @@ function MatchController.new()
     local self = setmetatable({}, MatchController)
     self.phase = nil
     self.roles = {}
+    self.RewardsManager = RewardsManager.new()
+    self.CosmeticsManager = CosmeticsManager.new()
     return self
 end
 
