@@ -1,0 +1,64 @@
+local Players = game:GetService("Players")
+
+local DarkSurge = {}
+DarkSurge.__index = DarkSurge
+
+DarkSurge.RADIUS = 6
+DarkSurge.SLOW_FACTOR = 0.6
+DarkSurge.BLACKOUT_TIME = 1.2
+DarkSurge.COOLDOWN = 12
+
+function DarkSurge.new(character)
+    local self = setmetatable({}, DarkSurge)
+    self.character = character
+    self.lastUsed = 0
+    return self
+end
+
+function DarkSurge:ready()
+    return os.clock() - self.lastUsed >= DarkSurge.COOLDOWN
+end
+
+local function findLight(character)
+    for _,desc in ipairs(character:GetDescendants()) do
+        if desc:IsA("PointLight") or desc:IsA("SpotLight") or desc:IsA("SurfaceLight") then
+            return desc
+        end
+    end
+end
+
+function DarkSurge:cast()
+    if not self.character or not self:ready() then return end
+    local root = self.character:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+    self.lastUsed = os.clock()
+    local origin = root.Position
+    for _,plr in ipairs(Players:GetPlayers()) do
+        local char = plr.Character
+        if char and char ~= self.character then
+            local hrp = char:FindFirstChild("HumanoidRootPart")
+            local hum = char:FindFirstChildOfClass("Humanoid")
+            if hrp and hum and (hrp.Position - origin).Magnitude <= DarkSurge.RADIUS then
+                local originalSpeed = hum.WalkSpeed
+                hum.WalkSpeed = originalSpeed * DarkSurge.SLOW_FACTOR
+                task.delay(DarkSurge.BLACKOUT_TIME, function()
+                    if hum then
+                        hum.WalkSpeed = originalSpeed
+                    end
+                end)
+                local light = findLight(char)
+                if light then
+                    local wasEnabled = light.Enabled
+                    light.Enabled = false
+                    task.delay(DarkSurge.BLACKOUT_TIME, function()
+                        if light then
+                            light.Enabled = wasEnabled
+                        end
+                    end)
+                end
+            end
+        end
+    end
+end
+
+return DarkSurge

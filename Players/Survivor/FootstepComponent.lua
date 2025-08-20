@@ -28,7 +28,7 @@ function FootstepComponent:update(dt)
     if self.speed > 2 then
         self.stepAccum = self.stepAccum + dt * self.speed / 14
         if self.stepAccum >= 0.5 then
-            self.stepAccum -= 0.5
+            self.stepAccum = self.stepAccum - 0.5
             self.sound:Play()
         end
     else
