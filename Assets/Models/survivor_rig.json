@@ -1,0 +1,21 @@
+{
+  "bones": [
+    {
+      "name": "root",
+      "position": [0, 0, 0],
+      "children": [
+        {
+          "name": "torso",
+          "position": [0, 0.75, 0],
+          "children": [
+            {"name": "head", "position": [0, 0.75, 0]},
+            {"name": "leftArm", "position": [0.65, 0.6, 0]},
+            {"name": "rightArm", "position": [-0.65, 0.6, 0]},
+            {"name": "leftLeg", "position": [0.35, -0.75, 0]},
+            {"name": "rightLeg", "position": [-0.35, -0.75, 0]}
+          ]
+        }
+      ]
+    }
+  ]
+}
