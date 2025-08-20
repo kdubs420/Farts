@@ -1,4 +1,5 @@
 local ContextActionService = game:GetService("ContextActionService")
+local Players = game:GetService("Players")
 
 local UseComponent = {}
 UseComponent.__index = UseComponent
@@ -37,11 +38,20 @@ function UseComponent:Use()
             if self.flashlight then
                 self.flashlight:startRecharge(obj)
             end
+        elseif useType == "Key" then
+            self:pickupKey(obj)
         end
     end
 end
 
 function UseComponent:useDoor(part)
+    local keyId = part:GetAttribute("KeyRequired")
+    if keyId then
+        local player = Players:GetPlayerFromCharacter(self.character)
+        if not (player and player:GetAttribute(keyId)) then
+            return
+        end
+    end
     local hinge = part.Parent:FindFirstChildWhichIsA("HingeConstraint", true)
     if hinge then
         local target = hinge.TargetAngle == 0 and 90 or 0
@@ -54,6 +64,15 @@ function UseComponent:useSwitch(part)
     if event then
         event:Fire()
     end
+end
+
+function UseComponent:pickupKey(part)
+    local keyId = part:GetAttribute("KeyId") or part.Name
+    local player = Players:GetPlayerFromCharacter(self.character)
+    if player then
+        player:SetAttribute(keyId, true)
+    end
+    part:Destroy()
 end
 
 function UseComponent:Destroy()
