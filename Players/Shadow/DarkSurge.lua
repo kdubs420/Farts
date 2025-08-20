@@ -1,5 +1,7 @@
 local Players = game:GetService("Players")
 
+local SURGE_SOUND_ID = "rbxassetid://0" -- replace with uploaded dark surge asset id
+
 local DarkSurge = {}
 DarkSurge.__index = DarkSurge
 
@@ -12,6 +14,11 @@ function DarkSurge.new(character)
     local self = setmetatable({}, DarkSurge)
     self.character = character
     self.lastUsed = 0
+    local root = character:WaitForChild("HumanoidRootPart")
+    self.sound = Instance.new("Sound")
+    self.sound.SoundId = SURGE_SOUND_ID
+    self.sound.Volume = 0.7
+    self.sound.Parent = root
     return self
 end
 
@@ -32,6 +39,9 @@ function DarkSurge:cast()
     local root = self.character:FindFirstChild("HumanoidRootPart")
     if not root then return end
     self.lastUsed = os.clock()
+    if self.sound then
+        self.sound:Play()
+    end
     local origin = root.Position
     for _,plr in ipairs(Players:GetPlayers()) do
         local char = plr.Character
