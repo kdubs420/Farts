@@ -72,6 +72,54 @@ def push_grunt():
 def push_impact():
     return single_step(0.3)
 
+def whisper_loop():
+    dur = 2.0
+    n = int(SAMPLE_RATE * dur)
+    samples = []
+    for i in range(n):
+        t = i / n
+        env = 0.2 + 0.8 * t  # grow over time
+        noise = random.uniform(-1, 1)
+        samples.append(noise * env * 0.2)
+    return samples
+
+def phase_dash_echo():
+    dur = 0.5
+    n = int(SAMPLE_RATE * dur)
+    base = []
+    for i in range(n):
+        t = i / SAMPLE_RATE
+        env = math.exp(-6 * t)
+        base.append(math.sin(2 * math.pi * 200 * t) * env * 0.6)
+    echo_gap = int(SAMPLE_RATE * 0.1)
+    echo = [s * 0.5 for s in base]
+    return base + [0.0] * echo_gap + echo
+
+def dark_surge_blackout():
+    dur = 0.8
+    n = int(SAMPLE_RATE * dur)
+    samples = []
+    for i in range(n):
+        t = i / SAMPLE_RATE
+        env = math.exp(-3 * t)
+        base = math.sin(2 * math.pi * 40 * t) + 0.5 * math.sin(2 * math.pi * 80 * t)
+        samples.append(base * env * 0.7)
+    return samples
+
+def tag_impact():
+    return single_step(0.15)
+
+def infection_transform():
+    dur = 1.0
+    n = int(SAMPLE_RATE * dur)
+    samples = []
+    for i in range(n):
+        t = i / SAMPLE_RATE
+        freq = 60 + 240 * (t / dur)
+        env = math.exp(-3 * t)
+        samples.append(math.sin(2 * math.pi * freq * t) * env * 0.6)
+    return samples
+
 os.makedirs('Assets/SFX', exist_ok=True)
 write_wave('Assets/SFX/footstep.wav', footstep_loop())
 write_wave('Assets/SFX/sprint_breathing.wav', breathing_loop())
@@ -80,3 +128,8 @@ write_wave('Assets/SFX/heartbeat_slow.wav', heartbeat_loop(60))
 write_wave('Assets/SFX/heartbeat_fast.wav', heartbeat_loop(120))
 write_wave('Assets/SFX/push_grunt.wav', push_grunt())
 write_wave('Assets/SFX/push_impact.wav', push_impact())
+write_wave('Assets/SFX/whisper_loop.wav', whisper_loop())
+write_wave('Assets/SFX/phase_dash.wav', phase_dash_echo())
+write_wave('Assets/SFX/dark_surge.wav', dark_surge_blackout())
+write_wave('Assets/SFX/tag_impact.wav', tag_impact())
+write_wave('Assets/SFX/infection_transform.wav', infection_transform())

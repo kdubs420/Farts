@@ -1,5 +1,7 @@
 local Debris = game:GetService("Debris")
 
+local DASH_SOUND_ID = "rbxassetid://0" -- replace with uploaded phase dash asset id
+
 local PhaseDash = {}
 PhaseDash.__index = PhaseDash
 
@@ -11,6 +13,11 @@ function PhaseDash.new(character)
     local self = setmetatable({}, PhaseDash)
     self.character = character
     self.lastUsed = 0
+    local root = character:WaitForChild("HumanoidRootPart")
+    self.sound = Instance.new("Sound")
+    self.sound.SoundId = DASH_SOUND_ID
+    self.sound.Volume = 0.6
+    self.sound.Parent = root
     return self
 end
 
@@ -43,6 +50,9 @@ function PhaseDash:dash(direction)
     local targetPos = root.Position + direction * PhaseDash.DASH_DISTANCE
     createAfterImage(self.character)
     self.lastUsed = os.clock()
+    if self.sound then
+        self.sound:Play()
+    end
     root.CFrame = CFrame.new(targetPos)
 end
 
