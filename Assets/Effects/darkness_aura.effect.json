@@ -1,0 +1,9 @@
+{
+  "type": "particle",
+  "rate": 20,
+  "lifetime": 0.6,
+  "texture": "rbxassetid://0",
+  "color": [0, 0, 0],
+  "size": [3, 3],
+  "spread": 1.5
+}
