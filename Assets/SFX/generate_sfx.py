@@ -121,6 +121,23 @@ def infection_transform():
     return samples
 
 os.makedirs('Assets/SFX', exist_ok=True)
+
+def ambient_hum():
+    dur = 2.0
+    n = int(SAMPLE_RATE * dur)
+    return [math.sin(2 * math.pi * 50 * (i / SAMPLE_RATE)) * 0.1 for i in range(n)]
+
+def metal_creak():
+    dur = 2.0
+    n = int(SAMPLE_RATE * dur)
+    samples = []
+    for i in range(n):
+        t = i / SAMPLE_RATE
+        noise = random.uniform(-0.5, 0.5)
+        env = math.exp(-3 * t)
+        samples.append((math.sin(2 * math.pi * 30 * t) + noise) * env * 0.4)
+    return samples
+
 write_wave('Assets/SFX/footstep.wav', footstep_loop())
 write_wave('Assets/SFX/sprint_breathing.wav', breathing_loop())
 write_wave('Assets/SFX/flashlight_flicker.wav', flashlight_flicker())
@@ -133,3 +150,5 @@ write_wave('Assets/SFX/phase_dash.wav', phase_dash_echo())
 write_wave('Assets/SFX/dark_surge.wav', dark_surge_blackout())
 write_wave('Assets/SFX/tag_impact.wav', tag_impact())
 write_wave('Assets/SFX/infection_transform.wav', infection_transform())
+write_wave('Assets/SFX/ambient_hum.wav', ambient_hum())
+write_wave('Assets/SFX/creaking_metal.wav', metal_creak())
