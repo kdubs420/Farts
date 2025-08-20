@@ -1,0 +1,11 @@
+newmtl Body
+Kd 0.2 0.2 0.2
+
+newmtl BatteryFull
+Kd 0.0 1.0 0.0
+
+newmtl BatteryHalf
+Kd 1.0 0.8 0.0
+
+newmtl BatteryLow
+Kd 1.0 0.0 0.0

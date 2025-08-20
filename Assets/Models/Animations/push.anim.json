@@ -1,0 +1,31 @@
+{
+  "fps": 30,
+  "length": 0.4,
+  "loop": false,
+  "keyframes": [
+    {
+      "time": 0.0,
+      "bones": {
+        "leftArm": {"rotation": [0, 0, 0]},
+        "rightArm": {"rotation": [0, 0, 0]},
+        "torso": {"position": [0, 0, 0]}
+      }
+    },
+    {
+      "time": 0.2,
+      "bones": {
+        "leftArm": {"rotation": [90, 0, 0]},
+        "rightArm": {"rotation": [90, 0, 0]},
+        "torso": {"position": [0, 0.1, -0.2]}
+      }
+    },
+    {
+      "time": 0.4,
+      "bones": {
+        "leftArm": {"rotation": [0, 0, 0]},
+        "rightArm": {"rotation": [0, 0, 0]},
+        "torso": {"position": [0, 0, 0]}
+      }
+    }
+  ]
+}
