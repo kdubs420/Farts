@@ -57,12 +57,20 @@ function UseComponent:useDoor(part)
         local target = hinge.TargetAngle == 0 and 90 or 0
         hinge.TargetAngle = target
     end
+    local sound = part:FindFirstChildWhichIsA("Sound")
+    if sound then
+        sound:Play()
+    end
 end
 
 function UseComponent:useSwitch(part)
     local event = part:FindFirstChildWhichIsA("BindableEvent")
     if event then
         event:Fire()
+    end
+    local sound = part:FindFirstChildWhichIsA("Sound")
+    if sound then
+        sound:Play()
     end
 end
 

@@ -79,11 +79,15 @@ function Map:_createWingLights(positions, switchPos)
     local event = Instance.new("BindableEvent")
     event.Parent = switch
     local on = false
+    local sound = Instance.new("Sound")
+    sound.SoundId = "rbxasset://sounds/switch_click.wav"
+    sound.Parent = switch
     event.Event:Connect(function()
         on = not on
         for _, l in ipairs(lights) do
             l.Enabled = on
         end
+        sound:Play()
     end)
 end
 
@@ -126,6 +130,10 @@ function Map:_createLockedDoor(cframe, size, keyId)
     hinge.TargetAngle = 0
     hinge.AngularSpeed = 2
     hinge.Parent = door
+
+    local sound = Instance.new("Sound")
+    sound.SoundId = "rbxasset://sounds/door_creak.wav"
+    sound.Parent = door
 end
 
 function Map:_createAudioZone(position, soundId, volume)
@@ -175,8 +183,8 @@ function Map:Build()
     self:_createLockedDoor(CFrame.new(0,5,30), Vector3.new(6,10,1), "Main")
 
     -- audio zones
-    self:_createAudioZone(Vector3.new(0,5,0), "rbxassetid://0", 0.2)
-    self:_createAudioZone(Vector3.new(0,15,0), "rbxassetid://0", 0.3)
+    self:_createAudioZone(Vector3.new(0,5,0), "rbxasset://sounds/asylum_hum_loop.wav", 0.2)
+    self:_createAudioZone(Vector3.new(0,15,0), "rbxasset://sounds/asylum_hum_loop.wav", 0.3)
 
     assert(self.partCount <= Map.MAX_PARTS, string.format("part budget exceeded (%d > %d)", self.partCount, Map.MAX_PARTS))
     return self.model
