@@ -1,0 +1,75 @@
+<roblox version="4">
+  <Item class="ScreenGui" name="HUD">
+    <Properties>
+      <bool name="ResetOnSpawn">false</bool>
+      <bool name="IgnoreGuiInset">true</bool>
+      <string name="Name">HUD</string>
+    </Properties>
+    <Item class="Frame" name="SafeArea">
+      <Properties>
+        <bool name="BackgroundTransparency">1</bool>
+        <Vector2 name="AnchorPoint">
+          <X>0.5</X>
+          <Y>0.5</Y>
+        </Vector2>
+        <UDim2 name="Position">
+          <XScale>0.5</XScale>
+          <XOffset>0</XOffset>
+          <YScale>0.5</YScale>
+          <YOffset>0</YOffset>
+        </UDim2>
+        <UDim2 name="Size">
+          <XScale>0.9</XScale>
+          <XOffset>0</XOffset>
+          <YScale>0.9</YScale>
+          <YOffset>0</YOffset>
+        </UDim2>
+        <bool name="SelectionGroup">true</bool>
+      </Properties>
+      <Item class="TextLabel" name="HealthLabel">
+        <Properties>
+          <bool name="BackgroundTransparency">1</bool>
+          <UDim2 name="Position">
+            <XScale>0</XScale>
+            <XOffset>10</XOffset>
+            <YScale>0</YScale>
+            <YOffset>10</YOffset>
+          </UDim2>
+          <UDim2 name="Size">
+            <XScale>0</XScale>
+            <XOffset>200</XOffset>
+            <YScale>0</YScale>
+            <YOffset>40</YOffset>
+          </UDim2>
+          <Enum name="Font">GothamBold</Enum>
+          <bool name="TextScaled">true</bool>
+          <string name="Text">Health: 100</string>
+          <Color3 name="TextColor3">1 1 1</Color3>
+          <string name="AccessibleDescription">Displays current health.</string>
+        </Properties>
+      </Item>
+      <Item class="TextLabel" name="StaminaLabel">
+        <Properties>
+          <bool name="BackgroundTransparency">1</bool>
+          <UDim2 name="Position">
+            <XScale>0</XScale>
+            <XOffset>10</XOffset>
+            <YScale>0</YScale>
+            <YOffset>60</YOffset>
+          </UDim2>
+          <UDim2 name="Size">
+            <XScale>0</XScale>
+            <XOffset>200</XOffset>
+            <YScale>0</YScale>
+            <YOffset>40</YOffset>
+          </UDim2>
+          <Enum name="Font">GothamBold</Enum>
+          <bool name="TextScaled">true</bool>
+          <string name="Text">Stamina: 100</string>
+          <Color3 name="TextColor3">1 1 1</Color3>
+          <string name="AccessibleDescription">Displays current stamina.</string>
+        </Properties>
+      </Item>
+    </Item>
+  </Item>
+</roblox>

@@ -1,0 +1,89 @@
+<roblox version="4">
+  <Item class="ScreenGui" name="Vote">
+    <Properties>
+      <bool name="ResetOnSpawn">false</bool>
+      <bool name="IgnoreGuiInset">true</bool>
+      <string name="Name">Vote</string>
+    </Properties>
+    <Item class="Frame" name="SafeArea">
+      <Properties>
+        <bool name="BackgroundTransparency">0.3</bool>
+        <Vector2 name="AnchorPoint">
+          <X>0.5</X>
+          <Y>0.5</Y>
+        </Vector2>
+        <UDim2 name="Position">
+          <XScale>0.5</XScale>
+          <XOffset>0</XOffset>
+          <YScale>0.5</YScale>
+          <YOffset>0</YOffset>
+        </UDim2>
+        <UDim2 name="Size">
+          <XScale>0.9</XScale>
+          <XOffset>0</XOffset>
+          <YScale>0.9</YScale>
+          <YOffset>0</YOffset>
+        </UDim2>
+        <bool name="SelectionGroup">true</bool>
+      </Properties>
+      <Item class="UIListLayout" name="Layout">
+        <Properties>
+          <Enum name="FillDirection">Horizontal</Enum>
+          <Enum name="HorizontalAlignment">Center</Enum>
+          <number name="Padding">20</number>
+        </Properties>
+      </Item>
+      <Item class="TextButton" name="MapAButton">
+        <Properties>
+          <bool name="BackgroundTransparency">0.2</bool>
+          <UDim2 name="Size">
+            <XScale>0</XScale>
+            <XOffset>200</XOffset>
+            <YScale>0</YScale>
+            <YOffset>100</YOffset>
+          </UDim2>
+          <Enum name="Font">GothamBold</Enum>
+          <bool name="TextScaled">true</bool>
+          <string name="Text">Depot</string>
+          <Color3 name="TextColor3">1 1 1</Color3>
+          <bool name="Selectable">true</bool>
+          <string name="AccessibleDescription">Vote for Steelhide Depot.</string>
+        </Properties>
+      </Item>
+      <Item class="TextButton" name="MapBButton">
+        <Properties>
+          <bool name="BackgroundTransparency">0.2</bool>
+          <UDim2 name="Size">
+            <XScale>0</XScale>
+            <XOffset>200</XOffset>
+            <YScale>0</YScale>
+            <YOffset>100</YOffset>
+          </UDim2>
+          <Enum name="Font">GothamBold</Enum>
+          <bool name="TextScaled">true</bool>
+          <string name="Text">Reserve</string>
+          <Color3 name="TextColor3">1 1 1</Color3>
+          <bool name="Selectable">true</bool>
+          <string name="AccessibleDescription">Vote for Blackpine Reserve.</string>
+        </Properties>
+      </Item>
+      <Item class="TextButton" name="MapCButton">
+        <Properties>
+          <bool name="BackgroundTransparency">0.2</bool>
+          <UDim2 name="Size">
+            <XScale>0</XScale>
+            <XOffset>200</XOffset>
+            <YScale>0</YScale>
+            <YOffset>100</YOffset>
+          </UDim2>
+          <Enum name="Font">GothamBold</Enum>
+          <bool name="TextScaled">true</bool>
+          <string name="Text">Wing</string>
+          <Color3 name="TextColor3">1 1 1</Color3>
+          <bool name="Selectable">true</bool>
+          <string name="AccessibleDescription">Vote for St. Verity Wing.</string>
+        </Properties>
+      </Item>
+    </Item>
+  </Item>
+</roblox>
