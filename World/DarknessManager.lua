@@ -1,18 +1,20 @@
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local Debris = game:GetService("Debris")
+local UserInputService = game:GetService("UserInputService")
 
 local DarknessManager = {}
 DarknessManager.__index = DarknessManager
 
-DarknessManager.EXPANSION_INTERVAL = 90
-DarknessManager.EXPANSION_AMOUNT = 20
+DarknessManager.EXPANSION_INTERVAL = 120
+DarknessManager.EXPANSION_AMOUNT = 15
 DarknessManager.MAX_RADIUS = 200
-DarknessManager.SHADOW_SPEED_BUFF = 1.12
+DarknessManager.SHADOW_SPEED_BUFF = 1.15
 DarknessManager.SURVIVOR_VIS_TRANSPARENCY = 0.4
 DarknessManager.SHADOW_LIGHT_TRANSPARENCY = 0.55
 DarknessManager.SHADOW_DARK_TRANSPARENCY = 0
 DarknessManager.VIGNETTE_DARK_ALPHA = 0.4
+DarknessManager.SIMPLE_SHADOWS = UserInputService.TouchEnabled
 
 function DarknessManager.new()
     local self = setmetatable({}, DarknessManager)
@@ -88,17 +90,19 @@ function DarknessManager:_updatePlayers()
 end
 
 function DarknessManager:_applySurvivorEffects(char, inDark)
-    for _, part in ipairs(char:GetDescendants()) do
-        if part:IsA("BasePart") then
-            local base = part:GetAttribute("BaseTransparency")
-            if not base then
-                part:SetAttribute("BaseTransparency", part.Transparency)
-                base = part.Transparency
-            end
-            if inDark then
-                part.Transparency = math.clamp(base + DarknessManager.SURVIVOR_VIS_TRANSPARENCY, 0, 1)
-            else
-                part.Transparency = base
+    if not DarknessManager.SIMPLE_SHADOWS then
+        for _, part in ipairs(char:GetDescendants()) do
+            if part:IsA("BasePart") then
+                local base = part:GetAttribute("BaseTransparency")
+                if not base then
+                    part:SetAttribute("BaseTransparency", part.Transparency)
+                    base = part.Transparency
+                end
+                if inDark then
+                    part.Transparency = math.clamp(base + DarknessManager.SURVIVOR_VIS_TRANSPARENCY, 0, 1)
+                else
+                    part.Transparency = base
+                end
             end
         end
     end
@@ -141,12 +145,14 @@ function DarknessManager:_applyShadowEffects(char, hum, inDark)
     else
         hum.WalkSpeed = baseSpeed
     end
-    for _, part in ipairs(char:GetDescendants()) do
-        if part:IsA("BasePart") then
-            if inDark then
-                part.Transparency = DarknessManager.SHADOW_DARK_TRANSPARENCY
-            else
-                part.Transparency = DarknessManager.SHADOW_LIGHT_TRANSPARENCY
+    if not DarknessManager.SIMPLE_SHADOWS then
+        for _, part in ipairs(char:GetDescendants()) do
+            if part:IsA("BasePart") then
+                if inDark then
+                    part.Transparency = DarknessManager.SHADOW_DARK_TRANSPARENCY
+                else
+                    part.Transparency = DarknessManager.SHADOW_LIGHT_TRANSPARENCY
+                end
             end
         end
     end
