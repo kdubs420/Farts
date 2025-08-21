@@ -2,6 +2,7 @@ local Players = game:GetService("Players")
 local RewardsManager = require(script.Parent.Parent.Systems.RewardsManager)
 local CosmeticsManager = require(script.Parent.Parent.Systems.CosmeticsManager)
 local MapVoteService = require(script.Parent.Parent.Systems.MapVoteService)
+local AudioService = require(script.Parent.Parent.Systems.AudioService)
 
 local MatchController = {}
 MatchController.__index = MatchController
@@ -22,10 +23,14 @@ local SHADOW_PER_SURVIVOR_MAX = 1/4
 
 local LobbyPhase = {}
 function LobbyPhase:enter(controller)
+    AudioService:PlayStinger("lobby")
     local function waitForPlayers()
         local playerList = Players:GetPlayers()
         if #playerList >= MIN_PLAYERS then
             controller:startMapVote()
+            controller:schedule(LOBBY_DURATION - 3, function()
+                AudioService:PlayCountdown(3)
+            end)
             controller:schedule(LOBBY_DURATION, function()
                 controller:assignRoles()
                 controller:transitionTo(PreparationPhase)
@@ -39,6 +44,10 @@ end
 
 local PreparationPhase = {}
 function PreparationPhase:enter(controller)
+    AudioService:PlayStinger("prep")
+    controller:schedule(PREPARATION_DURATION - 3, function()
+        AudioService:PlayCountdown(3)
+    end)
     controller:schedule(PREPARATION_DURATION, function()
         controller:transitionTo(HuntPhase)
     end)
@@ -46,8 +55,12 @@ end
 
 local HuntPhase = {}
 function HuntPhase:enter(controller)
+    AudioService:PlayStinger("hunt")
     controller.RewardsManager:BeginMatch(controller.roles)
     controller:triggerDarkness()
+    controller:schedule(HUNT_MIN_DURATION - 3, function()
+        AudioService:PlayCountdown(3)
+    end)
     controller:schedule(HUNT_MIN_DURATION, function()
         controller:transitionTo(EndgamePhase)
     end)
@@ -55,7 +68,11 @@ end
 
 local EndgamePhase = {}
 function EndgamePhase:enter(controller)
+    AudioService:PlayStinger("endgame")
     controller:spawnPortal()
+    controller:schedule(ENDGAME_DURATION - 3, function()
+        AudioService:PlayCountdown(3)
+    end)
     controller:schedule(ENDGAME_DURATION, function()
         controller:transitionTo(ResultsPhase)
     end)
@@ -63,7 +80,9 @@ end
 
 local ResultsPhase = {}
 function ResultsPhase:enter(controller)
+    AudioService:PlayStinger("results")
     controller:calculateResults()
+    AudioService:PlayMatchEndFanfare()
     controller.RewardsManager:Distribute(controller.winningTeam)
     controller:schedule(RESULTS_DURATION, function()
         controller:transitionTo(LobbyPhase)
@@ -145,6 +164,7 @@ end
 
 function MatchController:spawnPortal()
     self.portalSpawned = true
+    AudioService:PlayPortalFanfare()
     if self.PortalService then
         self.PortalService:Spawn()
     end

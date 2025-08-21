@@ -120,6 +120,81 @@ def infection_transform():
         samples.append(math.sin(2 * math.pi * freq * t) * env * 0.6)
     return samples
 
+def ui_click():
+    n = int(SAMPLE_RATE * 0.1)
+    samples = []
+    for i in range(n):
+        t = i / SAMPLE_RATE
+        env = math.exp(-40 * t)
+        samples.append(math.sin(2 * math.pi * 800 * t) * env * 0.4)
+    return samples
+
+def ui_hover():
+    n = int(SAMPLE_RATE * 0.15)
+    samples = []
+    for i in range(n):
+        t = i / SAMPLE_RATE
+        env = math.exp(-25 * t)
+        samples.append(math.sin(2 * math.pi * 600 * t) * env * 0.3)
+    return samples
+
+def countdown_beep():
+    n = int(SAMPLE_RATE * 0.25)
+    samples = []
+    for i in range(n):
+        t = i / SAMPLE_RATE
+        env = math.exp(-12 * t)
+        samples.append(math.sin(2 * math.pi * 1000 * t) * env * 0.5)
+    return samples
+
+def stinger(base):
+    dur = 0.6
+    n = int(SAMPLE_RATE * dur)
+    samples = []
+    for i in range(n):
+        t = i / SAMPLE_RATE
+        env = math.exp(-4 * t)
+        samples.append((math.sin(2 * math.pi * base * t) + 0.5 * math.sin(2 * math.pi * 2 * base * t)) * env * 0.6)
+    return samples
+
+def stinger_lobby():
+    return stinger(220)
+
+def stinger_prep():
+    return stinger(260)
+
+def stinger_hunt():
+    return stinger(300)
+
+def stinger_endgame():
+    return stinger(340)
+
+def stinger_results():
+    return stinger(180)
+
+def portal_spawn_fanfare():
+    dur = 1.0
+    tones = [440, 660, 880]
+    seg = int(SAMPLE_RATE * (dur / len(tones)))
+    samples = []
+    for f in tones:
+        for i in range(seg):
+            t = i / SAMPLE_RATE
+            env = math.exp(-3 * t)
+            samples.append(math.sin(2 * math.pi * f * t) * env * 0.5)
+    return samples
+
+def match_end_fanfare():
+    dur = 1.2
+    n = int(SAMPLE_RATE * dur)
+    samples = []
+    for i in range(n):
+        t = i / SAMPLE_RATE
+        env = math.exp(-2 * t)
+        chord = (math.sin(2 * math.pi * 330 * t) + math.sin(2 * math.pi * 440 * t) + math.sin(2 * math.pi * 550 * t)) / 3
+        samples.append(chord * env * 0.6)
+    return samples
+
 os.makedirs('Assets/SFX', exist_ok=True)
 
 def ambient_hum():
@@ -225,6 +300,16 @@ ensure_wave('Assets/SFX/phase_dash.wav', phase_dash_echo)
 ensure_wave('Assets/SFX/dark_surge.wav', dark_surge_blackout)
 ensure_wave('Assets/SFX/tag_impact.wav', tag_impact)
 ensure_wave('Assets/SFX/infection_transform.wav', infection_transform)
+ensure_wave('Assets/SFX/ui_click.wav', ui_click)
+ensure_wave('Assets/SFX/ui_hover.wav', ui_hover)
+ensure_wave('Assets/SFX/countdown_beep.wav', countdown_beep)
+ensure_wave('Assets/SFX/stinger_lobby.wav', stinger_lobby)
+ensure_wave('Assets/SFX/stinger_prep.wav', stinger_prep)
+ensure_wave('Assets/SFX/stinger_hunt.wav', stinger_hunt)
+ensure_wave('Assets/SFX/stinger_endgame.wav', stinger_endgame)
+ensure_wave('Assets/SFX/stinger_results.wav', stinger_results)
+ensure_wave('Assets/SFX/portal_spawn.wav', portal_spawn_fanfare)
+ensure_wave('Assets/SFX/match_end_fanfare.wav', match_end_fanfare)
 ensure_wave('Assets/SFX/ambient_hum.wav', ambient_hum)
 ensure_wave('Assets/SFX/creaking_metal.wav', metal_creak)
 ensure_wave('Assets/SFX/warehouse_machinery_loop.wav', machinery_loop)

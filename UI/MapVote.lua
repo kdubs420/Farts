@@ -1,5 +1,6 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local AudioService = require(script.Parent.Parent.Systems.AudioService)
 
 local MapVote = {}
 MapVote.__index = MapVote
@@ -45,7 +46,11 @@ function MapVote:ShowOptions(maps)
         button.Position = UDim2.new(0, 15, 0, (i - 1) * 26 + 10)
         button.Text = map
         button.Parent = self.frame
+        button.MouseEnter:Connect(function()
+            AudioService:PlayHover()
+        end)
         button.MouseButton1Click:Connect(function()
+            AudioService:PlayClick()
             self.voteEvent:FireServer(map)
         end)
     end
