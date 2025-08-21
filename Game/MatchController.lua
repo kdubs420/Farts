@@ -1,16 +1,15 @@
 local Players = game:GetService("Players")
 local RewardsManager = require(script.Parent.Parent.Systems.RewardsManager)
 local CosmeticsManager = require(script.Parent.Parent.Systems.CosmeticsManager)
+local MapVoteService = require(script.Parent.Parent.Systems.MapVoteService)
 
 local MatchController = {}
 MatchController.__index = MatchController
 
--- utility
 local function round(n)
     return n >= 0 and math.floor(n + 0.5) or math.ceil(n - 0.5)
 end
 
--- match constants
 local MIN_PLAYERS = 6
 local LOBBY_DURATION = 15
 local PREPARATION_DURATION = 20
@@ -21,12 +20,12 @@ local RESULTS_DURATION = 10
 local SHADOW_PER_SURVIVOR_MIN = 1/6
 local SHADOW_PER_SURVIVOR_MAX = 1/4
 
--- phase declarations
 local LobbyPhase = {}
 function LobbyPhase:enter(controller)
     local function waitForPlayers()
         local playerList = Players:GetPlayers()
         if #playerList >= MIN_PLAYERS then
+            controller:startMapVote()
             controller:schedule(LOBBY_DURATION, function()
                 controller:assignRoles()
                 controller:transitionTo(PreparationPhase)
@@ -71,13 +70,13 @@ function ResultsPhase:enter(controller)
     end)
 end
 
--- MatchController methods
 function MatchController.new()
     local self = setmetatable({}, MatchController)
     self.phase = nil
     self.roles = {}
     self.RewardsManager = RewardsManager.new()
     self.CosmeticsManager = CosmeticsManager.new()
+    self.MapVoteService = MapVoteService.new()
     return self
 end
 
@@ -94,14 +93,15 @@ function MatchController:schedule(duration, callback)
     task.delay(duration, callback)
 end
 
-function MatchController:assignRoles()
-    local players = Players:GetPlayers()
-    local total = #players
-    local minShadows = math.max(1, round(total * SHADOW_PER_SURVIVOR_MIN))
-    local maxShadows = math.max(minShadows, round(total * SHADOW_PER_SURVIVOR_MAX))
-    local targetShadows = math.clamp(round(total / 5), minShadows, maxShadows)
+function MatchController:startMapVote()
+    if self.MapVoteService then
+        self.MapVoteService:Start(LOBBY_DURATION, function(winner)
+            self.selectedMap = winner
+        end)
+    end
+end
 
-    -- shuffle players
+function MatchController:rollShadows(players, target)
     local pool = {}
     for i, plr in ipairs(players) do
         pool[i] = plr
@@ -110,10 +110,25 @@ function MatchController:assignRoles()
         local j = math.random(i)
         pool[i], pool[j] = pool[j], pool[i]
     end
+    local shadows = {}
+    for i = 1, target do
+        shadows[pool[i]] = true
+    end
+    return shadows
+end
+
+function MatchController:assignRoles()
+    local players = Players:GetPlayers()
+    local total = #players
+    local minShadows = math.max(1, round(total * SHADOW_PER_SURVIVOR_MIN))
+    local maxShadows = math.max(minShadows, round(total * SHADOW_PER_SURVIVOR_MAX))
+    local targetShadows = math.clamp(round(total / 5), minShadows, maxShadows)
+
+    local shadowMap = self:rollShadows(players, targetShadows)
 
     self.roles = {}
-    for i, plr in ipairs(pool) do
-        local role = i <= targetShadows and "Shadow" or "Survivor"
+    for _, plr in ipairs(players) do
+        local role = shadowMap[plr] and "Shadow" or "Survivor"
         self.roles[plr] = role
         if plr.SetAttribute then
             plr:SetAttribute("Role", role)
