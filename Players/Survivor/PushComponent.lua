@@ -3,7 +3,7 @@ local Players = game:GetService("Players")
 local PushComponent = {}
 PushComponent.__index = PushComponent
 
-PushComponent.COOLDOWN = 10
+PushComponent.COOLDOWN = 8
 PushComponent.RANGE = 3
 PushComponent.FORCE = 50
 

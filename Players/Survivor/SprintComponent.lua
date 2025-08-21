@@ -6,8 +6,8 @@ SprintComponent.__index = SprintComponent
 SprintComponent.MAX_STAMINA = 100
 SprintComponent.REGEN_RATE = 18 -- per second
 SprintComponent.DRAIN_RATE = 25 -- per second while sprinting
-SprintComponent.WALK_SPEED = 14
-SprintComponent.SPRINT_SPEED = 18
+SprintComponent.WALK_SPEED = 15
+SprintComponent.SPRINT_SPEED = 20
 
 function SprintComponent.new(humanoid)
     local self = setmetatable({}, SprintComponent)

@@ -8,7 +8,7 @@ DarkSurge.__index = DarkSurge
 DarkSurge.RADIUS = 6
 DarkSurge.SLOW_FACTOR = 0.6
 DarkSurge.BLACKOUT_TIME = 1.2
-DarkSurge.COOLDOWN = 12
+DarkSurge.COOLDOWN = 10
 
 function DarkSurge.new(character)
     local self = setmetatable({}, DarkSurge)

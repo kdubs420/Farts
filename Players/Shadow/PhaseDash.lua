@@ -6,7 +6,7 @@ local PhaseDash = {}
 PhaseDash.__index = PhaseDash
 
 PhaseDash.DASH_DISTANCE = 10
-PhaseDash.COOLDOWN = 8
+PhaseDash.COOLDOWN = 7
 PhaseDash.AFTERIMAGE_TIME = 0.4
 
 function PhaseDash.new(character)
