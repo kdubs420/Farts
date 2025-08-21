@@ -146,7 +146,7 @@ function Map:_createCampfire(position)
     light.Parent = base
 
     local sound = Instance.new("Sound")
-    sound.SoundId = "rbxassetid://0"
+    sound.SoundId = "rbxasset://sounds/campfire_crackle_loop.wav"
     sound.Looped = true
     sound.Volume = 0.4
     sound.Playing = true
@@ -178,7 +178,7 @@ function Map:_createWind(position)
     self:_addPart(part)
 
     local sound = Instance.new("Sound")
-    sound.SoundId = "rbxassetid://0"
+    sound.SoundId = "rbxasset://sounds/forest_wind_loop.wav"
     sound.Looped = true
     sound.Volume = 0.3
     sound.Playing = true

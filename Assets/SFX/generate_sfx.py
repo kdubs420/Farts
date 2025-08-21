@@ -138,17 +138,98 @@ def metal_creak():
         samples.append((math.sin(2 * math.pi * 30 * t) + noise) * env * 0.4)
     return samples
 
-write_wave('Assets/SFX/footstep.wav', footstep_loop())
-write_wave('Assets/SFX/sprint_breathing.wav', breathing_loop())
-write_wave('Assets/SFX/flashlight_flicker.wav', flashlight_flicker())
-write_wave('Assets/SFX/heartbeat_slow.wav', heartbeat_loop(60))
-write_wave('Assets/SFX/heartbeat_fast.wav', heartbeat_loop(120))
-write_wave('Assets/SFX/push_grunt.wav', push_grunt())
-write_wave('Assets/SFX/push_impact.wav', push_impact())
-write_wave('Assets/SFX/whisper_loop.wav', whisper_loop())
-write_wave('Assets/SFX/phase_dash.wav', phase_dash_echo())
-write_wave('Assets/SFX/dark_surge.wav', dark_surge_blackout())
-write_wave('Assets/SFX/tag_impact.wav', tag_impact())
-write_wave('Assets/SFX/infection_transform.wav', infection_transform())
-write_wave('Assets/SFX/ambient_hum.wav', ambient_hum())
-write_wave('Assets/SFX/creaking_metal.wav', metal_creak())
+def machinery_loop():
+    dur = 3.0
+    n = int(SAMPLE_RATE * dur)
+    samples = []
+    clank_interval = int(SAMPLE_RATE * 0.75)
+    for i in range(n):
+        t = i / SAMPLE_RATE
+        hum = math.sin(2 * math.pi * 40 * t) * 0.1 + math.sin(2 * math.pi * 80 * t) * 0.05
+        clank = 0.0
+        pos = i % clank_interval
+        if pos < int(SAMPLE_RATE * 0.05):
+            env = math.exp(-40 * pos / SAMPLE_RATE)
+            clank = math.sin(2 * math.pi * 200 * pos / SAMPLE_RATE) * env * 0.3
+        samples.append(hum + clank)
+    return samples
+
+def forest_wind_loop():
+    dur = 4.0
+    n = int(SAMPLE_RATE * dur)
+    samples = []
+    prev = 0.0
+    for i in range(n):
+        t = i / SAMPLE_RATE
+        noise = random.uniform(-1, 1)
+        prev = 0.98 * prev + 0.02 * noise
+        gust = 0.5 + 0.5 * math.sin(2 * math.pi * 0.25 * t)
+        howl = math.sin(2 * math.pi * 200 * t) * max(0.0, math.sin(2 * math.pi * 0.25 * t))**2
+        samples.append(prev * gust * 0.3 + howl * 0.1)
+    return samples
+
+def asylum_hum_loop():
+    dur = 3.0
+    n = int(SAMPLE_RATE * dur)
+    samples = []
+    for i in range(n):
+        t = i / SAMPLE_RATE
+        base = math.sin(2 * math.pi * 55 * t) + 0.5 * math.sin(2 * math.pi * 110 * t)
+        mod = math.sin(2 * math.pi * 2 * t) * 0.02
+        samples.append((base * 0.08) + mod)
+    return samples
+
+def door_creak():
+    dur = 1.0
+    n = int(SAMPLE_RATE * dur)
+    samples = []
+    for i in range(n):
+        t = i / SAMPLE_RATE
+        freq = 80 + 120 * t
+        env = math.sin(math.pi * t / dur)
+        noise = random.uniform(-0.3, 0.3)
+        samples.append((math.sin(2 * math.pi * freq * t) + noise) * env * 0.5)
+    return samples
+
+def switch_click():
+    n = int(SAMPLE_RATE * 0.1)
+    return [math.sin(2 * math.pi * 2000 * (i / SAMPLE_RATE)) * math.exp(-60 * i / SAMPLE_RATE) * 0.5 for i in range(n)]
+
+def campfire_crackle_loop():
+    dur = 3.0
+    n = int(SAMPLE_RATE * dur)
+    samples = [random.uniform(-0.02, 0.02) for _ in range(n)]
+    step = int(SAMPLE_RATE * 0.1)
+    burst = int(SAMPLE_RATE * 0.02)
+    for start in range(0, n, step):
+        for j in range(burst):
+            idx = start + j
+            if idx < n:
+                env = math.exp(-50 * j / SAMPLE_RATE)
+                samples[idx] += random.uniform(-1, 1) * env * 0.3
+    return samples
+
+def ensure_wave(path, gen):
+    if not os.path.exists(path):
+        write_wave(path, gen())
+
+ensure_wave('Assets/SFX/footstep.wav', footstep_loop)
+ensure_wave('Assets/SFX/sprint_breathing.wav', breathing_loop)
+ensure_wave('Assets/SFX/flashlight_flicker.wav', flashlight_flicker)
+ensure_wave('Assets/SFX/heartbeat_slow.wav', lambda: heartbeat_loop(60))
+ensure_wave('Assets/SFX/heartbeat_fast.wav', lambda: heartbeat_loop(120))
+ensure_wave('Assets/SFX/push_grunt.wav', push_grunt)
+ensure_wave('Assets/SFX/push_impact.wav', push_impact)
+ensure_wave('Assets/SFX/whisper_loop.wav', whisper_loop)
+ensure_wave('Assets/SFX/phase_dash.wav', phase_dash_echo)
+ensure_wave('Assets/SFX/dark_surge.wav', dark_surge_blackout)
+ensure_wave('Assets/SFX/tag_impact.wav', tag_impact)
+ensure_wave('Assets/SFX/infection_transform.wav', infection_transform)
+ensure_wave('Assets/SFX/ambient_hum.wav', ambient_hum)
+ensure_wave('Assets/SFX/creaking_metal.wav', metal_creak)
+ensure_wave('Assets/SFX/warehouse_machinery_loop.wav', machinery_loop)
+ensure_wave('Assets/SFX/forest_wind_loop.wav', forest_wind_loop)
+ensure_wave('Assets/SFX/asylum_hum_loop.wav', asylum_hum_loop)
+ensure_wave('Assets/SFX/door_creak.wav', door_creak)
+ensure_wave('Assets/SFX/switch_click.wav', switch_click)
+ensure_wave('Assets/SFX/campfire_crackle_loop.wav', campfire_crackle_loop)

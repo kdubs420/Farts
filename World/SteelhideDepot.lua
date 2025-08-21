@@ -46,8 +46,12 @@ function Map:_createSwitchLight(position)
 
     local click = Instance.new("ClickDetector")
     click.Parent = lightPart
+    local sound = Instance.new("Sound")
+    sound.SoundId = "rbxasset://sounds/switch_click.wav"
+    sound.Parent = lightPart
     click.MouseClick:Connect(function()
         light.Enabled = not light.Enabled
+        sound:Play()
     end)
 end
 
@@ -92,7 +96,7 @@ function Map:_createAmbientSound(position)
     self:_addPart(emitter)
 
     local sound = Instance.new("Sound")
-    sound.SoundId = "rbxassetid://0"
+    sound.SoundId = "rbxasset://sounds/warehouse_machinery_loop.wav"
     sound.Looped = true
     sound.Volume = 0.4
     sound.Playing = true
